@@ -1,0 +1,53 @@
+---
+- name: install opigno packages
+  with_items: "{{ opigno_packages }}"
+  package:
+    name: "{{ item.name }}"
+  notify:
+    - restart php fpm
+
+- name: create www root directory
+  file:
+    path: /usr/local/www
+    owner: www
+    group: www
+    state: directory
+
+- name: check if www root already exists
+  stat:
+    path: /usr/local/www/opigno
+  register: opigno_www
+
+- name: download and extract tarball
+  unarchive:
+    src: "{{ opigno_url }}"
+    dest: /usr/local/www
+    owner: www
+    group: www
+    copy: no
+  when: not opigno_www.stat.exists
+
+- name: rename www root
+  command: mv /usr/local/www/{{ opigno_dir }} /usr/local/www/opigno
+  when: not opigno_www.stat.exists
+
+- name: configure php
+  copy:
+    src: php.ini
+    dest: /usr/local/etc/php.ini
+  notify:
+    - restart php fpm
+
+- name: configure php fpm
+  copy:
+    src: www.conf
+    dest: /usr/local/etc/php-fpm.d/www.conf
+  notify:
+    - restart php fpm
+
+- name: enable php fpm
+  template:
+    src: php_fpm.j2
+    dest: /etc/rc.conf.d/php_fpm
+  notify:
+    - restart php fpm
