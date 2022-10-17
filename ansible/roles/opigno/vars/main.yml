@@ -1,16 +1,17 @@
 ---
 php_major: 7
-php_minor: 3
+php_minor: 4
 php_version: "{{ php_major }}.{{ php_minor }}"
 php_version_short: "{{ php_major }}{{ php_minor }}"
 php_prefix: "php{{ php_version_short }}"
 
-opigno_major: 2
-opigno_minor: 19
-opigno_version: "{{ opigno_major }}.{{ opigno_minor }}"
+opigno_major: 3
+opigno_minor: 0
+opigno_patch: 2
+opigno_version: "{{ opigno_major }}.{{ opigno_minor }}.{{ opigno_patch}}"
 opigno_dir: "opigno_with_dependencies-v{{ opigno_version }}"
 opigno_tarball: "{{ opigno_dir }}.tar.gz"
-opigno_date: "2021-01"
+opigno_date: "2022-04"
 opigno_url: "https://www.opigno.org/sites/default/files/{{ opigno_date }}/{{ opigno_tarball }}"
 opigno_packages:
   - name: gtar
@@ -18,12 +19,11 @@ opigno_packages:
   - name: "{{ php_prefix }}-dom"
   - name: "{{ php_prefix }}-filter"
   - name: "{{ php_prefix }}-gd"
-  - name: "{{ php_prefix }}-hash"
   - name: "{{ php_prefix }}-json"
   - name: "{{ php_prefix }}-mbstring"
   - name: "{{ php_prefix }}-opcache"
   - name: "{{ php_prefix }}-openssl"
-  - name: "{{ php_prefix }}-pdo_pgsql"
+  - name: "{{ php_prefix }}-pdo_mysql"
   - name: "{{ php_prefix }}-session"
   - name: "{{ php_prefix }}-simplexml"
   - name: "{{ php_prefix }}-tokenizer"

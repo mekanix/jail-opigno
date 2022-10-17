@@ -8,27 +8,23 @@
 
 - name: create www root directory
   file:
-    path: /usr/local/www
+    path: /usr/local/www/opigno
     owner: www
     group: www
     state: directory
 
 - name: check if www root already exists
   stat:
-    path: /usr/local/www/opigno
+    path: /usr/local/www/opigno/web
   register: opigno_www
 
 - name: download and extract tarball
   unarchive:
     src: "{{ opigno_url }}"
-    dest: /usr/local/www
+    dest: /usr/local/www/opigno
     owner: www
     group: www
     copy: no
-  when: not opigno_www.stat.exists
-
-- name: rename www root
-  command: mv /usr/local/www/{{ opigno_dir }} /usr/local/www/opigno
   when: not opigno_www.stat.exists
 
 - name: configure php
@@ -38,10 +34,17 @@
   notify:
     - restart php fpm
 
-- name: configure php fpm
+- name: configure php fpm pool
   copy:
     src: www.conf
     dest: /usr/local/etc/php-fpm.d/www.conf
+  notify:
+    - restart php fpm
+
+- name: configure php fpm pool
+  copy:
+    src: www6.conf
+    dest: /usr/local/etc/php-fpm.d/www6.conf
   notify:
     - restart php fpm
 
